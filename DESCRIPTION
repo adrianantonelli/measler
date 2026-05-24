@@ -19,3 +19,5 @@ Suggests:
 VignetteBuilder: knitr
 Imports: 
     readr
+URL: https://github.com/adrianantonelli/measler
+BugReports: https://github.com/adrianantonelli/measler/issues
