@@ -1,0 +1,21 @@
+Package: measler
+Title: Tools for Analyzing WHO Measles and Rubella Data
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Adrian", "Antonelli", role = c("aut", "cre"),
+           email = "adrianantonelli9@gmail.com"),
+    person("William", "Cuthbert", role = "aut"),
+    person("Sebastien", "Montgrain", role = "aut")
+  )
+Description: Data is collected from the WHO provisional monthly Measles and Rubella dataset. This package seeks to facilitate the code meant to portray the data in terms of months. We currently have 3 proposed functions that display desired months in plot form or table form, as well as a summary statistics collection of total cases, incidence rate and discarded cases for the interactor's desired country.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.0.0
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Imports: 
+    readr
