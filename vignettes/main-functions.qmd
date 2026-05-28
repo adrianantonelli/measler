@@ -1,0 +1,163 @@
+---
+title: "main-functions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{main-functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(monthr)
+library(dplyr)
+library(tidyr)
+library(gt)
+library(ggplot2)
+```
+
+```{r}
+monthly_table <- function(selected_region,
+                          selected_months = NULL) {
+  
+  region_labels <- c(
+    "AFR"  = "Africa",
+    "AMR"  = "Americas",
+    "EMR"  = "Eastern Mediterranean",
+    "EUR"  = "Europe",
+    "SEAR" = "South-East Asia",
+    "WPR"  = "Western Pacific"
+  )
+  
+  filtered_data <- cases_month |>
+    filter(
+      region == selected_region,
+      measles_total >= 0
+    )
+  
+  if (!is.null(selected_months)) {
+    filtered_data <- filtered_data |>
+      filter(month %in% selected_months)
+  }
+  
+  filtered_data |>
+    group_by(month, region) |>
+    summarise(
+      avg_measles = mean(measles_total, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    mutate(
+      month = factor(month.abb[month], levels = month.abb),
+      region = recode(region, !!!region_labels)
+    ) |>
+    pivot_wider(
+      names_from = month,
+      values_from = avg_measles
+    ) |>
+    gt() |>
+    fmt_number(
+      columns = where(is.numeric),
+      decimals = 2
+    ) |>
+    cols_label(region = "Region") |>
+    tab_header(
+      title = paste(
+        "Average Monthly Measles Cases:",
+        region_labels[selected_region]
+      )
+    ) |>
+    tab_style(
+      style = cell_text(weight = "bold"),
+      locations = cells_title(groups = "title")
+    ) |>
+    tab_source_note(
+      source_note = "Data source: WHO"
+    )
+}
+
+```
+
+
+```{r}
+monthly_plot <- function(selected_region,
+                          selected_months = NULL){
+  
+  region_labels <- c(
+    "AFR"  = "Africa",
+    "AMR"  = "Americas",
+    "EMR"  = "Eastern Mediterranean",
+    "EUR"  = "Europe",
+    "SEAR" = "South-East Asia",
+    "WPR"  = "Western Pacific"
+  )
+  
+  filtered_data <- cases_month |>
+    filter(
+      region == selected_region,
+      measles_total >= 0
+    )
+  
+  if (!is.null(selected_months)) {
+    filtered_data <- filtered_data |>
+      filter(month %in% selected_months)
+  }
+  
+  filtered_data |>
+    group_by(month, region) |>
+    summarise(
+      avg_measles = mean(measles_total, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    mutate(
+      month = factor(month.abb[month], levels = month.abb),
+      region = recode(region, !!!region_labels)
+    ) |>
+    ggplot(aes(x = month, 
+               y = avg_measles, 
+               group = region, 
+               color = region)) +
+  geom_line() +
+  geom_smooth(method = "lm", 
+              se = FALSE,
+              linewidth = 0.5,
+              linetype = "dashed",
+              col = "black") +
+  facet_wrap(~region, 
+             scales = "free_y") +
+  labs(x = "Month", 
+       title = "Measles Cases by Month Across the World", y = "", 
+       subtitle = "Number of Total Measles Cases (Clinical, EPI linked, and Lab Confirmed)") +
+  theme_linedraw() +
+  scale_color_brewer(palette = "Dark2") +
+  theme(axis.text.x = element_text(size = 6),
+        legend.position = "none")
+  
+  }
+
+```
+
+
+```{r}
+country <- function(selected_country){
+  cases_year |>
+    filter(country == selected_country) |>
+    group_by(year) |>
+    summarise(
+      total_cases = sum(measles_total, na.rm = TRUE),
+      avg_incidence_per_1M = mean(measles_incidence_rate_per_1000000_total_population, na.rm = TRUE),
+      discarded_cases = sum(discarded_cases, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    mutate(
+      avg_incidence_per_1M = round(avg_incidence_per_1M, 2)
+    ) |>
+    arrange(year) 
+}
+
+```
