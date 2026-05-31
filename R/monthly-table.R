@@ -30,15 +30,19 @@ monthly_table <- function(data, selected_region, selected_months = NULL) {
 
 
   filter_region(data, selected_region, selected_months) |>
-    mutate(month = factor(month.abb[month], levels = month.abb),
+    mutate(
+      month = factor(month.abb[month], levels = month.abb),
       region = recode(region,
-      "AFR" = "Africa","AMR" = "Americas",
-      "EMR" = "Eastern Mediterranean",
-      "EUR" = "Europe",
-      "SEAR" = "South-East Asia",
-      "WPR" = "Western Pacific")) |>
+                      "AFR" = "Africa",
+                      "AMR" = "Americas",
+                      "EMR" = "Eastern Mediterranean",
+                      "EUR" = "Europe",
+                      "SEAR" = "South-East Asia",
+                      "WPR" = "Western Pacific"
+      )
+    ) |>
     pivot_wider(names_from = month,
-      values_from = avg_measles) |>
+                values_from = avg_measles) |>
     gt() |>
     fmt_number(
       columns = where(is.numeric),

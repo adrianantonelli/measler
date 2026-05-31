@@ -13,21 +13,18 @@ load_data <- function(){
   cases_year <- readr::read_csv(
     "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-06-24/cases_year.csv"
   ) |>
-    row_to_names(1) |>
     clean_names() |>
     rename(
-      country = member_state,
-      iso3 = iso_country_code,
-      measles_total= number_of_measles_cases_by_confirmation_method,
-      measles_lab_confirmed = na,
-      measles_epi_linked = na_2,
-      measles_clinical = na_3,
-      rubella_total = number_of_rubella_cases_by_confirmation_method,
-      rubella_lab_confirmed = na_4,
-      rubella_epi_linked = na_5,
-      rubella_clinical = na_6
-    ) |>
-    slice(-1)
+      measles_suspected_total = total_suspected_measles_rubella_cases,
+      measles_incidence_rate  = measles_incidence_rate_per_1000000_total_population,
+      rubella_incidence_rate  = rubella_incidence_rate_per_1000000_total_population,
+      discarded_rate          = discarded_non_measles_rubella_cases_per_100000_total_population
+    )
+
+  list(
+    cases_month = cases_month,
+    cases_year = cases_year
+  )
 }
 
 

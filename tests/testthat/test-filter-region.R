@@ -1,3 +1,5 @@
+cases_month <- load_data()$cases_month
+
 test_that("filter_region returns a tibble", {
   result <- filter_region(cases_month, "AMR")
   expect_s3_class(result, "tbl_df")

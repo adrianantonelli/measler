@@ -1,4 +1,6 @@
-test_that("monthly_table works properly", {
+cases_month <- load_data()$cases_month
+
+test_that("monthly_table returns a gt table for valid region", {
   tbl <- monthly_table(cases_month, "AMR")
   expect_s3_class(tbl, "gt_tbl")
 })

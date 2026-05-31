@@ -2,6 +2,10 @@
 #'
 #' Creates a line plot of average monthly measles cases for a chosen WHO
 #' region, with an optional filter for specific months.
+#' Plot Average Monthly Measles Cases by Region
+#'
+#' Creates a line plot of average monthly measles cases for a chosen WHO
+#' region, with an optional filter for specific months.
 #'
 #' @param data A data frame containing monthly measles case data.
 #' @param selected_region A character string specifying the WHO region code.
@@ -21,12 +25,14 @@
 monthly_plot <- function(data, selected_region, selected_months = NULL) {
   filter_region(data, selected_region, selected_months) |>
     mutate(month = factor(month.abb[month], levels = month.abb),
-      region = recode(region,
-      "AFR" = "Africa", "AMR" = "Americas",
-      "EMR" = "Eastern Mediterranean",
-      "EUR" = "Europe",
-      "SEAR" = "South-East Asia",
-      "WPR" = "Western Pacific")) |>
+           region = dplyr::recode(region,
+                                  "AFR" = "Africa",
+                                  "AMR" = "Americas",
+                                  "EMR" = "Eastern Mediterranean",
+                                  "EUR" = "Europe",
+                                  "SEAR" = "South-East Asia",
+                                  "WPR" = "Western Pacific"
+           )) |>
     ggplot(aes(x = month, y = avg_measles,
                group = region,color = region)) +
     geom_line() +
@@ -43,4 +49,4 @@ monthly_plot <- function(data, selected_region, selected_months = NULL) {
     scale_color_brewer(palette = "Dark2") +
     theme(axis.text.x = element_text(size = 6),
           legend.position = "none")
-  }
+}

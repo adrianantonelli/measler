@@ -1,3 +1,4 @@
+cases_month <- load_data()$cases_month
 
 test_that("monthly_plot returns a plot for a possible region", {
   plot <- monthly_plot(cases_month, "AMR")
