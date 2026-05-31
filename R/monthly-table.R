@@ -12,7 +12,7 @@
 #' @return A gt table of average monthly measles cases for the selected region.
 #' @export
 #'
-#' @importFrom dplyr mutate case_match
+#' @importFrom dplyr mutate recode
 #' @importFrom tidyr pivot_wider
 #' @importFrom gt gt fmt_number cols_label tab_header tab_style tab_source_note cell_text cells_title
 #'
@@ -31,11 +31,12 @@ monthly_table <- function(data, selected_region, selected_months = NULL) {
 
   filter_region(data, selected_region, selected_months) |>
     mutate(month = factor(month.abb[month], levels = month.abb),
-      region = case_match(region,
-        "AFR" ~ "Africa", "AMR" ~ "Americas",
-        "EMR" ~ "Eastern Mediterranean",
-        "EUR" ~ "Europe", "SEAR" ~ "South-East Asia",
-        "WPR" ~ "Western Pacific")) |>
+      region = recode(region,
+      "AFR" = "Africa","AMR" = "Americas",
+      "EMR" = "Eastern Mediterranean",
+      "EUR" = "Europe",
+      "SEAR" = "South-East Asia",
+      "WPR" = "Western Pacific")) |>
     pivot_wider(names_from = month,
       values_from = avg_measles) |>
     gt() |>
