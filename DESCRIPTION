@@ -15,9 +15,15 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Imports: 
-    readr
+    dplyr,
+    ggplot2,
+    gt,
+    readr,
+    tidyr
 URL: https://github.com/adrianantonelli/measler
 BugReports: https://github.com/adrianantonelli/measler/issues
+Config/testthat/edition: 3

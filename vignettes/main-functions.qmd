@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(monthr)
 library(dplyr)
 library(tidyr)
 library(gt)
