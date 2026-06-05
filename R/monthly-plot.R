@@ -2,10 +2,6 @@
 #'
 #' Creates a line plot of average monthly measles cases for a chosen WHO
 #' region, with an optional filter for specific months.
-#' Plot Average Monthly Measles Cases by Region
-#'
-#' Creates a line plot of average monthly measles cases for a chosen WHO
-#' region, with an optional filter for specific months.
 #'
 #' @param data A data frame containing monthly measles case data.
 #' @param selected_region A character string specifying the WHO region code.
@@ -22,6 +18,7 @@
 #' @examples
 #' monthly_plot(cases_month, "AMR")
 #' monthly_plot(cases_month, "EUR", selected_months = c(1, 2, 3))
+
 monthly_plot <- function(data, selected_region, selected_months = NULL) {
   filter_region(data, selected_region, selected_months) |>
     mutate(month = factor(month.abb[month], levels = month.abb),

@@ -22,7 +22,11 @@ Imports:
     dplyr,
     ggplot2,
     gt,
+    janitor,
     readr,
+    rnaturalearth,
+    rnaturalearthdata,
+    sf,
     tidyr
 URL: https://github.com/adrianantonelli/measler
 BugReports: https://github.com/adrianantonelli/measler/issues

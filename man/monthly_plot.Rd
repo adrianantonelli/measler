@@ -21,11 +21,6 @@ A ggplot object showing average monthly measles cases.
 \description{
 Creates a line plot of average monthly measles cases for a chosen WHO
 region, with an optional filter for specific months.
-Plot Average Monthly Measles Cases by Region
-}
-\details{
-Creates a line plot of average monthly measles cases for a chosen WHO
-region, with an optional filter for specific months.
 }
 \examples{
 monthly_plot(cases_month, "AMR")
