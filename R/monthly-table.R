@@ -17,9 +17,9 @@
 #' @importFrom gt gt fmt_number cols_label tab_header tab_style tab_source_note cell_text cells_title
 #'
 #' @examples
-#' monthly_table(cases_month, "AMR")
-#' monthly_table(cases_month, "EUR", selected_months = c(1, 2, 3))
-monthly_table <- function(data, selected_region, selected_months = NULL) {
+#' monthly_table("AMR")
+#' monthly_table("EUR", selected_months = c(1, 2, 3))
+monthly_table <- function(selected_region, selected_months = NULL, data = load_data()$cases_month) {
   region_labels <- c(
     "AFR" = "Africa",
     "AMR" = "Americas",

@@ -3,8 +3,8 @@
 #' Creates a map of total measles cases by country for a chosen WHO region,
 #' shaded by case count and summed across all available years in the data.
 #'
-#' @param data A data frame containing yearly measles case data, such as the
-#'   `cases_year` tibble returned by [load_data()].
+#' @param data A data frame containing yearly measles case data, defaulted to the
+#'   `cases_year` tibble returned  by [load_data()] and taken with $cases_year.
 #' @param selected_region A character string specifying the WHO region code.
 #'   One of "AFR", "AMR", "EMR", "EUR", "SEAR", "WPR".
 #'
@@ -17,10 +17,9 @@
 #' @importFrom ggplot2 ggplot geom_sf aes scale_fill_gradient labs theme_void
 #'
 #' @examples
-#' data <- load_data()
-#' region_map(data$cases_year, "AMR")
+#' region_map("AMR")
 
-region_map <- function(data, selected_region) {
+region_map <- function(selected_region, data = load_data()$cases_year) {
   valid_regions <- c("AFR", "AMR", "EMR", "EUR", "SEAR", "WPR")
 
   if (!is.data.frame(data)) {
@@ -40,7 +39,7 @@ region_map <- function(data, selected_region) {
                     SEAR = "South-East Asia", WPR = "Western Pacific")
 
   region_data <- data |>
-    filter(region == region_codes[[selected_region]]) |>
+    filter(region == selected_region) |>
     group_by(country, iso3) |>
     summarise(measles = sum(measles_total, na.rm = TRUE), .groups = "drop")
 
@@ -56,3 +55,4 @@ region_map <- function(data, selected_region) {
                        region_names[[selected_region]])) +
     theme_void()
 }
+

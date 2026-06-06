@@ -4,13 +4,13 @@
 \alias{country_table}
 \title{Summarizing Yearly Measles Cases for a Country}
 \usage{
-country_table(data, selected_country)
+country_table(selected_country, data = load_data()$cases_year)
 }
 \arguments{
-\item{data}{A data frame containing yearly measles case data, such as the
-\code{cases_year} tibble returned by \code{\link[=load_data]{load_data()}}.}
-
 \item{selected_country}{A character string specifying the country name.}
+
+\item{data}{A data frame containing yearly measles case data, defaulted to the
+\code{cases_year} tibble returned by \code{\link[=load_data]{load_data()}} and taken with $cases_year.}
 }
 \value{
 A tibble with one row per year, containing \code{total_cases},
@@ -21,6 +21,6 @@ Filters the yearly measles data to a single country and summarizes total
 cases, average incidence rate, and discarded cases by year.
 }
 \examples{
-data <- load_data()
-country_table(data$cases_year, "Brazil")
+country_table("Brazil")
+country_table("United States of America")
 }

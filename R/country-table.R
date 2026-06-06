@@ -3,8 +3,8 @@
 #' Filters the yearly measles data to a single country and summarizes total
 #' cases, average incidence rate, and discarded cases by year.
 #'
-#' @param data A data frame containing yearly measles case data, such as the
-#' `cases_year` tibble returned by [load_data()].
+#' @param data A data frame containing yearly measles case data, defaulted to the
+#' `cases_year` tibble returned by [load_data()] and taken with $cases_year.
 #' @param selected_country A character string specifying the country name.
 #'
 #' @return A tibble with one row per year, containing `total_cases`,
@@ -14,9 +14,9 @@
 #' @importFrom dplyr filter group_by summarise mutate arrange
 #'
 #' @examples
-#' data <- load_data()
-#' country_table(data$cases_year, "Brazil")
-country_table <- function(data, selected_country) {
+#' country_table("Brazil")
+#' country_table("United States of America")
+country_table <- function(selected_country, data = load_data()$cases_year) {
   if (!is.data.frame(data)) {
     stop("`data` must be a data frame.", call. = FALSE)
   }
@@ -35,9 +35,9 @@ country_table <- function(data, selected_country) {
     filter(country == selected_country) |>
     group_by(year) |>
     summarise(total_cases = sum(measles_total, na.rm = TRUE),
-      avg_incidence_per_1M = mean(measles_incidence_rate, na.rm = TRUE),
-      discarded_cases = sum(discarded_cases, na.rm = TRUE),
-      .groups = "drop") |>
+              avg_incidence_per_1M = mean(measles_incidence_rate, na.rm = TRUE),
+              discarded_cases = sum(discarded, na.rm = TRUE),
+              .groups = "drop") |>
     mutate(
       avg_incidence_per_1M = round(avg_incidence_per_1M, 2)) |>
     arrange(year)
