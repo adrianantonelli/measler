@@ -4,16 +4,20 @@
 \alias{monthly_table}
 \title{Summarize Average Monthly Measles Cases by Region}
 \usage{
-monthly_table(data, selected_region, selected_months = NULL)
+monthly_table(
+  selected_region,
+  selected_months = NULL,
+  data = load_data()$cases_month
+)
 }
 \arguments{
-\item{data}{A data frame containing monthly measles case data.}
-
 \item{selected_region}{A character string specifying the WHO region code.
 One of "AFR", "AMR", "EMR", "EUR", "SEAR", "WPR".}
 
 \item{selected_months}{A numeric vector of month numbers from 1-12.
 If no months are chosen then all months are included.}
+
+\item{data}{A data frame containing monthly measles case data.}
 }
 \value{
 A gt table of average monthly measles cases for the selected region.
@@ -23,6 +27,6 @@ Returns a gt table of average monthly measles cases for chosen WHO
 region, with an optional filter for specific months.
 }
 \examples{
-monthly_table(cases_month, "AMR")
-monthly_table(cases_month, "EUR", selected_months = c(1, 2, 3))
+monthly_table("AMR")
+monthly_table("EUR", selected_months = c(1, 2, 3))
 }

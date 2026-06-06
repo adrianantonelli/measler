@@ -4,14 +4,14 @@
 \alias{region_map}
 \title{Map Total Measles Cases by Country for a WHO Region}
 \usage{
-region_map(data, selected_region)
+region_map(selected_region, data = load_data()$cases_year)
 }
 \arguments{
-\item{data}{A data frame containing yearly measles case data, such as the
-\code{cases_year} tibble returned by \code{\link[=load_data]{load_data()}}.}
-
 \item{selected_region}{A character string specifying the WHO region code.
 One of "AFR", "AMR", "EMR", "EUR", "SEAR", "WPR".}
+
+\item{data}{A data frame containing yearly measles case data, defaulted to the
+\code{cases_year} tibble returned  by \code{\link[=load_data]{load_data()}} and taken with $cases_year.}
 }
 \value{
 A ggplot object showing a map of total measles cases by country,
@@ -22,6 +22,5 @@ Creates a map of total measles cases by country for a chosen WHO region,
 shaded by case count and summed across all available years in the data.
 }
 \examples{
-data <- load_data()
-region_map(data$cases_year, "AMR")
+region_map("AMR")
 }

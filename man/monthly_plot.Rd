@@ -4,16 +4,20 @@
 \alias{monthly_plot}
 \title{Plot Average Monthly Measles Cases by Region}
 \usage{
-monthly_plot(data, selected_region, selected_months = NULL)
+monthly_plot(
+  selected_region,
+  selected_months = NULL,
+  data = load_data()$cases_month
+)
 }
 \arguments{
-\item{data}{A data frame containing monthly measles case data.}
-
 \item{selected_region}{A character string specifying the WHO region code.
 It can be one of the following listed: "AFR", "AMR", "EMR", "EUR", "SEAR", "WPR".}
 
 \item{selected_months}{A numeric vector that can take month numbers between 1-12.
 If no months are chosen specifically, and its NULL then all months are included.}
+
+\item{data}{A data frame containing monthly measles case data, defaulted to cases_month tibble on monthly measles case data.}
 }
 \value{
 A ggplot object showing average monthly measles cases.
@@ -23,6 +27,7 @@ Creates a line plot of average monthly measles cases for a chosen WHO
 region, with an optional filter for specific months.
 }
 \examples{
-monthly_plot(cases_month, "AMR")
-monthly_plot(cases_month, "EUR", selected_months = c(1, 2, 3))
+cases_month <- load_data()$cases_month
+monthly_plot("AMR")
+monthly_plot("EUR", selected_months = c(1, 2, 3))
 }
