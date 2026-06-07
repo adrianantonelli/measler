@@ -11,6 +11,8 @@
 #' If no months are chosen then all months are included.
 #'
 #' @return A summarized tibble with avg_measles per month and region.
+#' @export
+
 #' @importFrom dplyr filter group_by summarise
 filter_region <- function(data, selected_region, selected_months = NULL) {
   valid_regions <- c("AFR", "AMR", "EMR", "EUR", "SEAR", "WPR")

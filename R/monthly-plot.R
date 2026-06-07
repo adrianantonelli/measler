@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @importFrom dplyr mutate recode
-#' @importFrom ggplot2 ggplot aes geom_line geom_smooth facet_wrap labs theme_linedraw scale_color_brewer theme element_text
+#' @importFrom ggplot2 ggplot aes geom_line facet_wrap labs theme_linedraw scale_color_brewer theme element_text
 #'
 #' @examples
 #' cases_month <- load_data()$cases_month
@@ -22,21 +22,16 @@
 monthly_plot <- function(selected_region, selected_months = NULL, data = load_data()$cases_month) {
   filter_region(data, selected_region, selected_months) |>
     mutate(month = factor(month.abb[month], levels = month.abb),
-           region = dplyr::recode(region,
-                                  "AFR" = "Africa",
-                                  "AMR" = "Americas",
-                                  "EMR" = "Eastern Mediterranean",
-                                  "EUR" = "Europe",
-                                  "SEAR" = "South-East Asia",
-                                  "WPR" = "Western Pacific"
-           )) |>
+           region = recode(region,
+          "AFR" = "Africa",
+          "AMR" = "Americas",
+          "EMR" = "Eastern Mediterranean",
+          "EUR" = "Europe",
+          "SEAR" = "South-East Asia",
+          "WPR" = "Western Pacific")) |>
     ggplot(aes(x = month, y = avg_measles,
                group = region,color = region)) +
     geom_line() +
-    geom_smooth(method = "lm",
-                se = FALSE, linewidth = 0.5,
-                linetype = "dashed",
-                col = "black") +
     facet_wrap(~region, scales = "free_y") +
     labs(x = "Month",
          title = "Measles Cases by Month Across the World",

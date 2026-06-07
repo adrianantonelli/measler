@@ -28,6 +28,7 @@ Imports:
     rnaturalearth,
     rnaturalearthdata,
     sf,
+    stats,
     tidyr
 URL: https://github.com/adrianantonelli/measler
 BugReports: https://github.com/adrianantonelli/measler/issues

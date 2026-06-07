@@ -5,158 +5,107 @@ vignette: >
   %\VignetteIndexEntry{main-functions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+format:
+  html:
+    toc: true
+    embed-resources: true
 ---
 
-```{r, include = FALSE}
+```{r}
+#| label: setup
+#| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 7,
+  fig.height = 4.5
 )
 ```
 
-```{r setup}
-library(dplyr)
-library(tidyr)
-library(gt)
-library(ggplot2)
-```
+'measler' provides 7 comprehensive functions that facilitate the viewing of monthly and yearly World Health Organization Measles data, ranging from January 2012 to May 2025. This vignette provides example uses of each of the 7 functions, while including the function meant for loading the data.
 
 ```{r}
-monthly_table <- function(selected_region,
-                          selected_months = NULL) {
-  
-  region_labels <- c(
-    "AFR"  = "Africa",
-    "AMR"  = "Americas",
-    "EMR"  = "Eastern Mediterranean",
-    "EUR"  = "Europe",
-    "SEAR" = "South-East Asia",
-    "WPR"  = "Western Pacific"
-  )
-  
-  filtered_data <- cases_month |>
-    filter(
-      region == selected_region,
-      measles_total >= 0
-    )
-  
-  if (!is.null(selected_months)) {
-    filtered_data <- filtered_data |>
-      filter(month %in% selected_months)
-  }
-  
-  filtered_data |>
-    group_by(month, region) |>
-    summarise(
-      avg_measles = mean(measles_total, na.rm = TRUE),
-      .groups = "drop"
-    ) |>
-    mutate(
-      month = factor(month.abb[month], levels = month.abb),
-      region = recode(region, !!!region_labels)
-    ) |>
-    pivot_wider(
-      names_from = month,
-      values_from = avg_measles
-    ) |>
-    gt() |>
-    fmt_number(
-      columns = where(is.numeric),
-      decimals = 2
-    ) |>
-    cols_label(region = "Region") |>
-    tab_header(
-      title = paste(
-        "Average Monthly Measles Cases:",
-        region_labels[selected_region]
-      )
-    ) |>
-    tab_style(
-      style = cell_text(weight = "bold"),
-      locations = cells_title(groups = "title")
-    ) |>
-    tab_source_note(
-      source_note = "Data source: WHO"
-    )
-}
+#| label: load
+library(measler)
 
+measles_data <- load_data()
 ```
 
+## 1. 'load_data()' - loads/cleans the two data sets
+
+'load_data()' draws on the 'extdata' folder to extract monthly and yearly data to put within a list for use in the remaining functions. Within the list contains two items; 'cases_month' and 'cases_year'.
 
 ```{r}
-monthly_plot <- function(selected_region,
-                          selected_months = NULL){
-  
-  region_labels <- c(
-    "AFR"  = "Africa",
-    "AMR"  = "Americas",
-    "EMR"  = "Eastern Mediterranean",
-    "EUR"  = "Europe",
-    "SEAR" = "South-East Asia",
-    "WPR"  = "Western Pacific"
-  )
-  
-  filtered_data <- cases_month |>
-    filter(
-      region == selected_region,
-      measles_total >= 0
-    )
-  
-  if (!is.null(selected_months)) {
-    filtered_data <- filtered_data |>
-      filter(month %in% selected_months)
-  }
-  
-  filtered_data |>
-    group_by(month, region) |>
-    summarise(
-      avg_measles = mean(measles_total, na.rm = TRUE),
-      .groups = "drop"
-    ) |>
-    mutate(
-      month = factor(month.abb[month], levels = month.abb),
-      region = recode(region, !!!region_labels)
-    ) |>
-    ggplot(aes(x = month, 
-               y = avg_measles, 
-               group = region, 
-               color = region)) +
-  geom_line() +
-  geom_smooth(method = "lm", 
-              se = FALSE,
-              linewidth = 0.5,
-              linetype = "dashed",
-              col = "black") +
-  facet_wrap(~region, 
-             scales = "free_y") +
-  labs(x = "Month", 
-       title = "Measles Cases by Month Across the World", y = "", 
-       subtitle = "Number of Total Measles Cases (Clinical, EPI linked, and Lab Confirmed)") +
-  theme_linedraw() +
-  scale_color_brewer(palette = "Dark2") +
-  theme(axis.text.x = element_text(size = 6),
-        legend.position = "none")
-  
-  }
-
+#| label: load-preview
+head(measles_data$cases_year)
 ```
 
+## 2. 'monthly_plot()' - line plot
+
+Draws a line plot using ggplot2, with the requirement of including a WHO World Region, and the option of selecting the range of months to be included in the graph. The data used in this function is 'cases_month'.
+
+The resulting graph represents the average measles cases on a month by month basis. The code below runs the measles total calculation for the African World region, ranging from April to July.
 
 ```{r}
-country <- function(selected_country){
-  cases_year |>
-    filter(country == selected_country) |>
-    group_by(year) |>
-    summarise(
-      total_cases = sum(measles_total, na.rm = TRUE),
-      avg_incidence_per_1M = mean(measles_incidence_rate_per_1000000_total_population, na.rm = TRUE),
-      discarded_cases = sum(discarded_cases, na.rm = TRUE),
-      .groups = "drop"
-    ) |>
-    mutate(
-      avg_incidence_per_1M = round(avg_incidence_per_1M, 2)
-    ) |>
-    arrange(year) 
-}
+#| label: monthly-plot
+monthly_plot("AFR", 
+             selected_months = c(4, 5, 6, 7))
+```
 
+## 3. 'monthly-table()' - summary table
+
+Produces a table summary grouped by the specified WHO World Region. Once again, you are required to input one of the 6 regions, and have the option to specify which months are included in the table.
+
+The resulting table represents the average measles cases on a month by month basis. The code below runs the measles total calculation for the Southeast Asian World region, ranging from August to October.
+
+```{r}
+#| label: monthly-table
+monthly_table("SEAR", 
+              selected_months = c(8, 9, 10))
+```
+
+## 4. 'month-f-test()' - statistical analysis
+
+Produces a f-test output (including numerator and denominator degrees of freedom, F-statistic, p-value and conclusion) from the selected region in 'cases_month'.
+
+The resulting table represents the test done on the selected region (and optionally, selected months) to see if month is a statistically significant predictor of total measles cases. The code below runs this test for the European World region, but only considering the second-half of the calendar year.
+
+```{r}
+#| label: month-f-test
+month_f_test("EUR", 
+             selected_months = c(7,8,9,10,11,12))
+```
+
+## 5. 'country-table()' - summary table
+
+Using the 'cases_year' data set, this function inputs a country name and returns 'total_cases', 'avg_incidence_per_1M' and 'discarded_cases' for the input country over the available years in the package.
+
+The resulting table represents each variable (year as well) as a column, where all the data therein relates to the country of input. The code below runs the table for the county Japan.
+
+```{r}
+#| label: country-table
+country_table("Japan")
+```
+
+## 6. 'filter-region()' - cleaning / wrangling
+
+Filters the monthly data set down to a single WHO World Region, optionally restricting the results to specific months. The output summarizes the average measles cases per month for that region. The code below runs the filter for the Western Pacific World region on all the months in the year.
+
+```{r}
+#| label: filter-region
+filter_region(measles_data$cases_month, 
+              "WPR")
+```
+
+## 7. 'region-map()' - map plot
+
+Using the 'cases_year' data set, this function requires a WHO World Region and produces a world heat-map, but only for countries who exist within the specified region.
+
+The resulting map represents the mean annual measles cases for a particular country, where darker-red countries show more cases than lighter-red countries. The code below runs the map for the Americas world region.
+
+```{r}
+#| label: region-map
+region_map("AMR")
 ```
